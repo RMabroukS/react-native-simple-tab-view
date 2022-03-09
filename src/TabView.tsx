@@ -26,7 +26,7 @@ import styles from './styles';
 import {
     TabViewItem
 } from './TabViewItem';
-const { height, width } = Dimensions.get("window")
+const { width } = Dimensions.get("window")
 
 
 type TabViewProps = {
@@ -70,7 +70,7 @@ const TabView: FC<ViewProps & TabViewProps> = ({ scrollEnabled = true, ...props 
 
     const onPressIn = (event: GestureResponderEvent, index: number) => {
         setFromContent(false)
-        if (event.nativeEvent.pageX >= width- activeItemWidth) {
+        if (event.nativeEvent.pageX >= width - activeItemWidth) {
             setValueStart(event.nativeEvent.pageX)
         }
         if (event.nativeEvent.pageX <= activeItemWidth) {
@@ -150,6 +150,7 @@ const TabContent: FC<ViewProps & { title: string }> = ({ ...props }) => {
     return (
         <View
             {...props}
+            style={[{ width }, props.style]}
         />
     )
 }
