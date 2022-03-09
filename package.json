@@ -1,0 +1,24 @@
+{
+  "name": "react-native-simple-tab-view",
+  "version": "0.0.1",
+  "description": "react-native-simple-tab-view",
+  "main": "index.ts",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RMabroukS/react-native-simple-tab-view.git"
+  },
+  "keywords": [
+    "react-native-simple-tab-view",
+    "tabview",
+    "tab-view"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/RMabroukS/react-native-simple-tab-view/issues"
+  },
+  "homepage": "https://github.com/RMabroukS/react-native-simple-tab-view#readme"
+}
