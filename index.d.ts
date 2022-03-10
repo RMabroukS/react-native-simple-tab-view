@@ -1,5 +1,6 @@
 import {
     StyleProp,
+    TextStyle,
     ViewProps,
     ViewStyle
 } from 'react-native';
@@ -9,6 +10,11 @@ export interface TabViewProps {
     onChangeIndex?: (index: number) => void,
     scrollEnabled?: boolean,
     containerStyle?: StyleProp<ViewStyle>,
+    indicatorStyle?: StyleProp<ViewStyle>,
+    indicatorColor?: string,
+    activeTextStyle?: StyleProp<TextStyle>,
+    textStyle?: StyleProp<TextStyle>,
+    vertical?: boolean
 }
 
 export interface TabContentProps {

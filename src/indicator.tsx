@@ -2,6 +2,10 @@
 import React, {
     FC
 } from 'react';
+import {
+    StyleProp,
+    ViewStyle
+} from 'react-native';
 
 import Animated, {
     Easing,
@@ -13,10 +17,16 @@ import styles from './styles';
 
 
 const Indicator: FC<{
-    activeItemWidth: number, translateXTo: number
+    activeItemWidth: number,
+    translateXTo: number,
+    indicatorStyle?: StyleProp<ViewStyle>,
+    indicatorColor?: string
 }> = ({
     activeItemWidth,
-    translateXTo }) => {
+    translateXTo,
+    indicatorStyle,
+    indicatorColor
+}) => {
 
         const indicatorAnimatedStyle = useAnimatedStyle(() => {
             const translateX = withTiming(translateXTo, { easing: Easing.elastic() })
@@ -27,11 +37,15 @@ const Indicator: FC<{
         return (
             <Animated.View
                 style={[styles.indicator,
-                    indicatorAnimatedStyle]}
+                    indicatorAnimatedStyle,
+                { backgroundColor: indicatorColor },
+                    indicatorStyle]}
             />
         )
     }
 
-
+Indicator.defaultProps = {
+    indicatorColor: "#8D8D8D"
+}
 
 export { Indicator }

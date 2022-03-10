@@ -7,7 +7,9 @@ import React, {
 import {
     LayoutChangeEvent,
     TouchableOpacityProps,
-    Dimensions
+    Dimensions,
+    StyleProp,
+    TextStyle
 } from 'react-native';
 import Animated, {
     useAnimatedStyle,
@@ -24,32 +26,38 @@ type TabViewItemProps = {
     isActive: boolean,
     onSetItemWidth: ((width: number) => void),
     scrollEnabled?: boolean,
-    itemsLength: number
+    itemsLength: number,
+    activeTextStyle?: StyleProp<TextStyle>,
+    textStyle?: StyleProp<TextStyle>,
 }
 
 const TabViewItem: FC<TouchableOpacityProps & TabViewItemProps> = ({
     onSetItemWidth,
     index,
     isActive,
-    value, scrollEnabled, itemsLength, ...props
+    value,
+    scrollEnabled,
+    textStyle,
+    activeTextStyle,
+    itemsLength, ...props
 }) => {
     const [ITEM_WIDTH, setWidth] = useState(0)
 
-    const textStyle = useAnimatedStyle(() => {
+    const _textStyle = useAnimatedStyle(() => {
         const opacity = withTiming(isActive ? 0 : 1)
         return { opacity }
     })
-    const activeTextStyle = useAnimatedStyle(() => {
+    const _activeTextStyle = useAnimatedStyle(() => {
         const opacity = withTiming(isActive ? 1 : 0)
         return { opacity }
     })
 
     useEffect(() => {
-        if (!scrollEnabled){
+        if (!scrollEnabled) {
             onSetItemWidth(width / itemsLength)
             setWidth(width / itemsLength)
         }
-           
+
     }, [])
     const onLayout = (event: LayoutChangeEvent) => {
         if (ITEM_WIDTH === 0 && scrollEnabled) {
@@ -64,10 +72,10 @@ const TabViewItem: FC<TouchableOpacityProps & TabViewItemProps> = ({
             style={[styles.tabItemContainer, { width: ITEM_WIDTH }]}>
             <Animated.Text
                 onLayout={onLayout}
-                style={[styles.activeText, activeTextStyle]}
+                style={[styles.activeText, _activeTextStyle, activeTextStyle]}
             >{value}</Animated.Text>
             <Animated.Text
-                style={[styles.text, textStyle]}
+                style={[styles.text, _textStyle, textStyle]}
             >{value}</Animated.Text>
         </ScaleButton>
     )

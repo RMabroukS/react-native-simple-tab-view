@@ -13,7 +13,8 @@ import {
     View,
     ViewProps,
     ViewStyle,
-    Dimensions
+    Dimensions,
+    TextStyle
 } from 'react-native';
 import Animated
     from 'react-native-reanimated';
@@ -34,11 +35,25 @@ type TabViewProps = {
     tabContainerStyle?: StyleProp<ViewStyle>,
     children: Array<ReactNode & { props: { title: string } }>,
     scrollEnabled?: boolean,
-
+    indicatorStyle?: StyleProp<ViewStyle>,
+    indicatorColor?: string,
+    textStyle?: StyleProp<ViewStyle>,
+    activeTextStyle?: StyleProp<TextStyle>,
+    onChangeIndex?: (index: number) => void,
+    vertical?: boolean
 }
 
 
-const TabView: FC<ViewProps & TabViewProps> = ({ scrollEnabled = true, ...props }) => {
+const TabView: FC<ViewProps & TabViewProps> = ({
+    indicatorStyle,
+    indicatorColor,
+    textStyle,
+    activeTextStyle,
+    onChangeIndex,
+    scrollEnabled,
+    vertical,
+    ...props
+}) => {
     const scrollViewRef = useRef<ScrollView>(null)
     const flatlistRef = useRef<FlatList>(null)
 
@@ -56,6 +71,8 @@ const TabView: FC<ViewProps & TabViewProps> = ({ scrollEnabled = true, ...props 
     const onPressOut = (event: GestureResponderEvent, index: number) => {
         if (event.nativeEvent.touches && event.nativeEvent.touches.length === 0) {
             setIndex(index)
+            onChangeIndex(index)
+
             if (selectedIndex !== index)
                 flatlistRef.current?.scrollToIndex({ index: index, animated: true })
             setActiveItemWidth(listOfItemsWidth[index].value)
@@ -94,8 +111,11 @@ const TabView: FC<ViewProps & TabViewProps> = ({ scrollEnabled = true, ...props 
                     showsHorizontalScrollIndicator={false}
                     horizontal
                 >
+
                     {[...Array.isArray(props.children) ? props.children : [props.children]].map((item, index) => {
                         return <TabViewItem
+                            activeTextStyle={activeTextStyle}
+                            textStyle={textStyle}
                             itemsLength={Array.isArray(props.children) ? props.children.length : 1}
                             scrollEnabled={scrollEnabled}
                             onSetItemWidth={(itemWidth) => {
@@ -104,6 +124,7 @@ const TabView: FC<ViewProps & TabViewProps> = ({ scrollEnabled = true, ...props 
                                 let newList = old.sort((a, b) => { return a.index - b.index });
                                 setActiveItemWidth(newList[0].value)
                                 setwidthItemsList(newList)
+
                             }}
                             isActive={index === selectedIndex}
                             onPressOut={(event) => onPressOut(event, index)}
@@ -114,6 +135,8 @@ const TabView: FC<ViewProps & TabViewProps> = ({ scrollEnabled = true, ...props 
                     })}
 
                     <Indicator
+                        indicatorColor={indicatorColor}
+                        indicatorStyle={indicatorStyle}
                         activeItemWidth={activeItemWidth}
                         translateXTo={translateXTo}
                     />
@@ -123,8 +146,10 @@ const TabView: FC<ViewProps & TabViewProps> = ({ scrollEnabled = true, ...props 
 
             <FlatList
                 onScroll={(event) => {
-                    const _index = Math.round(event.nativeEvent.contentOffset.x / width)
+                    const _index = Math.round(event.nativeEvent.contentOffset[vertical ? "y" : "x"] / width)
                     if (fromContent && _index !== selectedIndex) {
+                        onChangeIndex(_index)
+                        setActiveItemWidth(listOfItemsWidth[_index].value)
                         setIndex(_index)
                     }
                 }}
@@ -132,12 +157,14 @@ const TabView: FC<ViewProps & TabViewProps> = ({ scrollEnabled = true, ...props 
                     setFromContent(true)
                 }}
                 ref={flatlistRef}
-                // bounces={false}
-                snapToAlignment={"start"}
-                showsHorizontalScrollIndicator={false}
-                snapToInterval={width}
-                decelerationRate={0}
-                horizontal
+                bounces={true}
+                {...!vertical && {
+                    snapToAlignment: "start",
+                    showsHorizontalScrollIndicator: false,
+                    snapToInterval: width,
+                    decelerationRate: 0
+                }}
+                horizontal={!vertical}
                 data={props.children}
                 renderItem={({ item }) => item}
             />
@@ -146,6 +173,13 @@ const TabView: FC<ViewProps & TabViewProps> = ({ scrollEnabled = true, ...props 
 
     )
 }
+
+TabView.defaultProps = {
+    onChangeIndex: (index) => { },
+    scrollEnabled: true,
+    vertical: false
+}
+
 const TabContent: FC<ViewProps & { title: string }> = ({ ...props }) => {
     return (
         <View
@@ -156,4 +190,7 @@ const TabContent: FC<ViewProps & { title: string }> = ({ ...props }) => {
 }
 
 
-export { TabView, TabContent }
+export {
+    TabView,
+    TabContent
+}

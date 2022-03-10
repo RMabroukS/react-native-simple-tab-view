@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     },
     tabItemContainer: {
         height: "100%",
-        backgroundColor: "white",
+        // backgroundColor: "white",
         alignItems: "center",
         justifyContent: "center"
     },
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         // fontFamily: Typography.REGULAR,
         fontSize: 12,
         color: "#8D8D8D",
-        position: "absolute"
+        // position: "absolute"
     },
     activeText: {
         // fontFamily: Typography.REGULAR,
