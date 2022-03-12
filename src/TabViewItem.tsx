@@ -28,7 +28,7 @@ type TabViewItemProps = {
     scrollEnabled?: boolean,
     itemsLength: number,
     activeTextStyle?: StyleProp<TextStyle>,
-    textStyle?: StyleProp<TextStyle>,
+    textStyle?: StyleProp<TextStyle>
 }
 
 const TabViewItem: FC<TouchableOpacityProps & TabViewItemProps> = ({

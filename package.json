@@ -1,6 +1,6 @@
 {
   "name": "react-native-simple-tab-view",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "react-native-simple-tab-view",
   "main": "index.ts",
   "typings": "./index.d.ts",
