@@ -14,18 +14,20 @@ export interface TabViewProps {
     indicatorColor?: string,
     activeTextStyle?: StyleProp<TextStyle>,
     textStyle?: StyleProp<TextStyle>,
-    vertical?: boolean
+    bounces?: boolean,
+    mode?: "fade" | "vertcal" | "horizontal",
+    initialIndex?: number
 }
 
-export interface TabContentProps {
+export interface TabItemProps {
     title: string
 }
 
 
 declare const TabView: React.FC<ViewProps & TabViewProps>
 
-export declare const TabContent: React.FC<
-    ViewProps & TabContentProps
+export declare const TabItem: React.FC<
+    ViewProps & TabItemProps
 >;
 
 export default TabView

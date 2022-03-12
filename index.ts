@@ -1,9 +1,9 @@
 import {
-    TabContent,
+    TabItem,
     TabView
 } from './src/TabView'
 
 export {
-    TabContent
+    TabItem
 }
 export default TabView
