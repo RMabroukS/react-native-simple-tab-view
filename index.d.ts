@@ -16,7 +16,7 @@ export interface TabViewProps {
     textStyle?: StyleProp<TextStyle>,
     bounces?: boolean,
     mode?: "fade" | "vertcal" | "horizontal",
-    initialIndex?: number
+    initialIndex?: number,
 }
 
 export interface TabItemProps {
