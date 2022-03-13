@@ -16,19 +16,20 @@ const styles = StyleSheet.create({
         height: "100%",
         // backgroundColor: "white",
         alignItems: "center",
-        justifyContent: "center"
+        justifyContent: "center",
+        paddingHorizontal:8
     },
     text: {
         // fontFamily: Typography.REGULAR,
         fontSize: 12,
         color: "#8D8D8D",
-        // position: "absolute"
+        position: "absolute"
     },
     activeText: {
         // fontFamily: Typography.REGULAR,
         fontSize: 12,
         color: "#7322A7",
-        position: "absolute",
+        // position: "absolute",
         fontWeight: "600"
     },
     indicator: {

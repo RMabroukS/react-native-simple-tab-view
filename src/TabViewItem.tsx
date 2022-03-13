@@ -69,7 +69,9 @@ const TabViewItem: FC<TouchableOpacityProps & TabViewItemProps> = ({
     return (
         <ScaleButton
             {...props}
-            style={[styles.tabItemContainer, { width: ITEM_WIDTH||(value&&value.length*6+16 )}]}>
+            // style={[styles.tabItemContainer, { width: ITEM_WIDTH||(value&&value.length*6+16 )}]}
+            style={styles.tabItemContainer}
+        >
             <Animated.Text
                 onLayout={onLayout}
                 style={[styles.activeText, _activeTextStyle, activeTextStyle]}
