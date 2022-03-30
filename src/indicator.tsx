@@ -3,6 +3,7 @@ import React, {
     FC
 } from 'react';
 import {
+    I18nManager,
     StyleProp,
     ViewStyle
 } from 'react-native';
@@ -27,9 +28,9 @@ const Indicator: FC<{
     indicatorStyle,
     indicatorColor
 }) => {
-
         const indicatorAnimatedStyle = useAnimatedStyle(() => {
-            const translateX = withTiming(translateXTo, { easing: Easing.elastic() })
+            // support rtl
+            const translateX = withTiming(I18nManager.isRTL ? -translateXTo : translateXTo, { easing: Easing.elastic() })
             const width = withTiming(activeItemWidth, { easing: Easing.elastic() })
             return { transform: [{ translateX: translateX }], width }
         })

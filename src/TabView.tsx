@@ -16,7 +16,7 @@ import {
     ViewStyle,
     Dimensions,
     TextStyle,
-    ActivityIndicator
+    I18nManager
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
@@ -77,16 +77,17 @@ const TabView: FC<ViewProps & TabViewProps> = ({
 
     let [fromContent, setFromContent] = useState(false)
 
+    const children = [...Array.isArray(props.children) ? props.children : [props.children]]
 
 
     const onPressOut = (event: GestureResponderEvent, index: number) => {
         if (event.nativeEvent.touches && event.nativeEvent.touches.length === 0) {
-            let scrollTo = listOfItemsWidth.slice(0, index).reduce((a, b) => a + b.value, 0) - (width /2)
+            let scrollTo = listOfItemsWidth.slice(0, index).reduce((a, b) => a + b.value, 0) - (width / 2)
             setIndex(index)
             onChangeIndex(index)
             if (selectedIndex !== index) {
                 if (mode !== "fade")
-                    flatlistRef.current?.scrollToIndex({ index: index, animated: true })
+                    flatlistRef.current?.scrollToIndex({ index: I18nManager.isRTL&&mode==="horizontal"?children.length-index-1:index, animated: true })
                 setActiveItemWidth(listOfItemsWidth[index].value)
             }
             scrollViewRef.current?.scrollTo({ animated: true, x: scrollTo })
@@ -126,7 +127,7 @@ const TabView: FC<ViewProps & TabViewProps> = ({
                     horizontal
                 >
 
-                    {[...Array.isArray(props.children) ? props.children : [props.children]].map((item, index) => {
+                    {children.map((item, index) => {
                         return <TabViewItem
                             activeTextStyle={activeTextStyle}
                             textStyle={textStyle}
@@ -144,7 +145,7 @@ const TabView: FC<ViewProps & TabViewProps> = ({
                             onPressOut={(event) => onPressOut(event, index)}
                             onPressIn={(event) => onPressIn(event, index)}
                             key={`TabViewItemKey_${index}`}
-                            value={item&&item.props.title}
+                            value={item && item.props.title}
                             index={index} />
                     })}
 
@@ -164,10 +165,11 @@ const TabView: FC<ViewProps & TabViewProps> = ({
                 activeIndex={selectedIndex}
                 children={props.children} />}
             {mode !== "fade" && <ScrollableContent
+                mode={mode}
                 selectedIndex={selectedIndex}
                 setIndex={(index) => {
                     setIndex(index)
-                    let scrollTo = listOfItemsWidth.slice(0, index).reduce((a, b) => a + b.value, 0) - (width /2)
+                    let scrollTo = listOfItemsWidth.slice(0, index).reduce((a, b) => a + b.value, 0) - (width / 2)
                     scrollViewRef.current?.scrollTo({ animated: true, x: scrollTo })
                 }}
                 children={props.children}

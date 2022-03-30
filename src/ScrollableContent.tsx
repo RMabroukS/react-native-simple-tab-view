@@ -16,7 +16,8 @@ import {
     View,
     ListRenderItem,
     ViewProps,
-    ViewToken
+    ViewToken,
+    I18nManager
 } from 'react-native';
 const { width, height } = Dimensions.get("window")
 
@@ -32,7 +33,8 @@ type TabViewProps = {
     listOfItemsWidth: Array<{ value: number }>,
     style?: StyleProp<ViewStyle>,
     selectedIndex: number,
-    setIndex: (index: number) => void
+    setIndex: (index: number) => void,
+    mode: "fade" | "vertcal" | "horizontal",
 }
 
 
@@ -47,7 +49,8 @@ const ScrollableContent = forwardRef<FlatList, TabViewProps>(({
     listOfItemsWidth,
     style,
     selectedIndex,
-    setIndex
+    setIndex,
+    mode
 }, ref) => {
     let [viewableItemIndex, setViewableItemIndex] = useState(0)
 
@@ -72,12 +75,13 @@ const ScrollableContent = forwardRef<FlatList, TabViewProps>(({
             }}
             key={`ScrollableTabItem${index}`} children={item} />
 
-            
+
 
     const onViewableItemsChanged = (info: { viewableItems: Array<ViewToken>; changed: Array<ViewToken> }) => {
+
         if (info.viewableItems.length) {
             const index = info.viewableItems[0].index
-                setViewableItemIndex(index)
+            setViewableItemIndex(I18nManager.isRTL && mode == "horizontal" ? children.length - index - 1 : index)
         }
     }
 

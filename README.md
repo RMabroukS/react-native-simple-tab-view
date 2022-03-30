@@ -2,7 +2,7 @@
 
 <p>
   <a href="https://github.com/RMabroukS/react-native-simple-tab-view">
-    <img alt="npm package" src="https://img.shields.io/badge/npm%20package-v0.0.10-green" />
+    <img alt="npm package" src="https://img.shields.io/badge/npm%20package-v0.0.11-green" />
   </a>
    <a href="https://github.com/RMabroukS/react-native-simple-tab-view/blob/main/LICENSE">
     <img alt="license" src="https://img.shields.io/badge/License-MIT-orange" />
