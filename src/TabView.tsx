@@ -16,7 +16,8 @@ import {
     ViewStyle,
     Dimensions,
     TextStyle,
-    I18nManager
+    I18nManager,
+    Platform
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
@@ -87,7 +88,7 @@ const TabView: FC<ViewProps & TabViewProps> = ({
             onChangeIndex(index)
             if (selectedIndex !== index) {
                 if (mode !== "fade")
-                    flatlistRef.current?.scrollToIndex({ index: I18nManager.isRTL&&mode==="horizontal"?children.length-index-1:index, animated: true })
+                    flatlistRef.current?.scrollToIndex({ index: (I18nManager.isRTL&&mode==="horizontal"&&Platform.OS==="ios")?children.length-index-1:index, animated: true })
                 setActiveItemWidth(listOfItemsWidth[index].value)
             }
             scrollViewRef.current?.scrollTo({ animated: true, x: scrollTo })
