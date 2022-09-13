@@ -17,7 +17,8 @@ import {
     ListRenderItem,
     ViewProps,
     ViewToken,
-    I18nManager
+    I18nManager,
+    Platform
 } from 'react-native';
 const { width, height } = Dimensions.get("window")
 
@@ -81,7 +82,7 @@ const ScrollableContent = forwardRef<FlatList, TabViewProps>(({
 
         if (info.viewableItems.length) {
             const index = info.viewableItems[0].index
-            setViewableItemIndex(I18nManager.isRTL && mode == "horizontal" ? children.length - index - 1 : index)
+            setViewableItemIndex((I18nManager.isRTL && mode == "horizontal"&&Platform.OS==="ios") ? children.length - index - 1 : index)
         }
     }
 
