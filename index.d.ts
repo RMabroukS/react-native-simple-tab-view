@@ -17,6 +17,8 @@ export interface TabViewProps {
     bounces?: boolean,
     mode?: "fade" | "vertcal" | "horizontal",
     initialIndex?: number,
+    disableIndicator?: boolean,
+    renderCustomTab?: (index: number, isActive: boolean) => void
 }
 
 export interface TabItemProps {

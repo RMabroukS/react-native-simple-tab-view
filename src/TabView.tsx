@@ -16,8 +16,7 @@ import {
     ViewStyle,
     Dimensions,
     TextStyle,
-    I18nManager,
-    Platform
+    I18nManager
 } from 'react-native';
 import Animated from 'react-native-reanimated';
 import {
@@ -50,6 +49,8 @@ type TabViewProps = {
     bounces?: boolean,
     mode: "fade" | "vertcal" | "horizontal",
     initialIndex?: number
+    disableIndicator?: boolean
+    renderCustomTab?: (index: number, isActive: boolean) => void
 }
 
 
@@ -63,19 +64,22 @@ const TabView: FC<ViewProps & TabViewProps> = ({
     bounces,
     mode,
     initialIndex,
+    disableIndicator=false,
+    renderCustomTab,
     ...props
 }) => {
     const scrollViewRef = useRef<ScrollView>(null)
+    const containerViewRef = useRef<Animated.View>(null)
     const flatlistRef = useRef<FlatList>(null)
 
     const [valueStart, setValueStart] = useState(0)
     const [selectedIndex, setIndex] = useState(0)
+    const [containerWidth, setContainerWidth] = useState<number | undefined>(undefined)
 
     let [listOfItemsWidth, setwidthItemsList] = useState<Array<{ index: number, value: number }>>([])
     let translateXTo = listOfItemsWidth.slice(0, selectedIndex).reduce((a, b) => a + b.value, 0)
     const [activeItemWidth, setActiveItemWidth] = useState(0)
     const renderIndex = Math.floor(width / activeItemWidth)
-
     let [fromContent, setFromContent] = useState(false)
 
     const children = [...Array.isArray(props.children) ? props.children : [props.children]]
@@ -88,7 +92,7 @@ const TabView: FC<ViewProps & TabViewProps> = ({
             onChangeIndex(index)
             if (selectedIndex !== index) {
                 if (mode !== "fade")
-                    flatlistRef.current?.scrollToIndex({ index:(I18nManager.isRTL && mode == "horizontal"&&Platform.OS==="ios")?children.length-index-1:index, animated: true })
+                    flatlistRef.current?.scrollToIndex({ index: I18nManager.isRTL&&mode==="horizontal"?children.length-index-1:index, animated: true })
                 setActiveItemWidth(listOfItemsWidth[index].value)
             }
             scrollViewRef.current?.scrollTo({ animated: true, x: scrollTo })
@@ -111,12 +115,17 @@ const TabView: FC<ViewProps & TabViewProps> = ({
         }
     }
 
+    useEffect(() => {
+        containerViewRef.current?.measure((x, y, width) => setContainerWidth(width))
+    }, [containerViewRef])
+    
+
 
 
     return (
         <View style={[{ flex: 1 }, props.containerStyle]}>
             <Animated.View
-                style={[styles.container, props.tabContainerStyle]}>
+                style={[styles.container, props.tabContainerStyle]} ref={containerViewRef}>
                 <ScrollView
                     bounces={false}
                     ref={scrollViewRef}
@@ -131,6 +140,8 @@ const TabView: FC<ViewProps & TabViewProps> = ({
                     {children.map((item, index) => {
                         return <TabViewItem
                             activeTextStyle={activeTextStyle}
+                            containerWidth= {containerWidth || width}
+                            renderCustomTab={renderCustomTab}
                             textStyle={textStyle}
                             itemsLength={Array.isArray(props.children) ? props.children.length : 1}
                             scrollEnabled={scrollEnabled}
@@ -150,12 +161,12 @@ const TabView: FC<ViewProps & TabViewProps> = ({
                             index={index} />
                     })}
 
-                    <Indicator
+                    {!disableIndicator ? <Indicator
                         indicatorColor={indicatorColor}
                         indicatorStyle={indicatorStyle}
                         activeItemWidth={activeItemWidth}
                         translateXTo={translateXTo}
-                    />
+                    /> : null}
 
                 </ScrollView>
             </Animated.View>
