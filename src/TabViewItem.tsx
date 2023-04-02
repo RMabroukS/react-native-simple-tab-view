@@ -28,7 +28,9 @@ type TabViewItemProps = {
     scrollEnabled?: boolean,
     itemsLength: number,
     activeTextStyle?: StyleProp<TextStyle>,
-    textStyle?: StyleProp<TextStyle>
+    textStyle?: StyleProp<TextStyle>,
+    renderCustomTab?: (index: number, isActive: boolean) => void,
+    containerWidth: any
 }
 
 const TabViewItem: FC<TouchableOpacityProps & TabViewItemProps> = ({
@@ -39,10 +41,11 @@ const TabViewItem: FC<TouchableOpacityProps & TabViewItemProps> = ({
     scrollEnabled,
     textStyle,
     activeTextStyle,
+    renderCustomTab,
+    containerWidth,
     itemsLength, ...props
 }) => {
     const [ITEM_WIDTH, setWidth] = useState(0)
-
     const _textStyle = useAnimatedStyle(() => {
         const opacity = withTiming(isActive ? 0 : 1)
         return { opacity }
@@ -54,11 +57,11 @@ const TabViewItem: FC<TouchableOpacityProps & TabViewItemProps> = ({
 
     useEffect(() => {
         if (!scrollEnabled) {
-            onSetItemWidth(width / itemsLength)
-            setWidth(width / itemsLength)
+            onSetItemWidth(containerWidth / itemsLength)
+            setWidth(containerWidth / itemsLength)
         }
-
-    }, [])
+    }, [containerWidth])
+    
     const onLayout = (event: LayoutChangeEvent) => {
         if (ITEM_WIDTH === 0 && scrollEnabled) {
             onSetItemWidth(event.nativeEvent.layout.width + 16)
@@ -72,13 +75,17 @@ const TabViewItem: FC<TouchableOpacityProps & TabViewItemProps> = ({
             // style={[styles.tabItemContainer, { width: ITEM_WIDTH||(value&&value.length*6+16 )}]}
             style={[styles.tabItemContainer, !scrollEnabled && { width: ITEM_WIDTH }]}
         >
-            <Animated.Text
-                onLayout={onLayout}
-                style={[styles.activeText, _activeTextStyle, activeTextStyle]}
-            >{value}</Animated.Text>
-            <Animated.Text
-                style={[styles.text, _textStyle, textStyle]}
-            >{value}</Animated.Text>
+            {renderCustomTab ? renderCustomTab(index, isActive) : (     //* added the ability to add custom tab
+                <>
+                    <Animated.Text
+                        onLayout={onLayout}
+                        style={[styles.activeText, _activeTextStyle, activeTextStyle]}
+                    >{value}</Animated.Text>
+                    <Animated.Text
+                        style={[styles.text, _textStyle, textStyle]}
+                    >{value}</Animated.Text>
+                </>
+            )}
         </ScaleButton>
     )
 }
